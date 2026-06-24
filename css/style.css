@@ -65,46 +65,60 @@ p{margin:0;}
 /* Hamburger — hidden on desktop */
 .menu-toggle{display:none;background:none;border:0;color:#fff;font-size:26px;cursor:pointer;padding:4px 8px;line-height:1;z-index:200;position:relative;}
 
-/* ---------- MOBILE NAV ---------- */
+/* ========== MOBILE NAV ========== */
 @media (max-width:880px){
   .menu-toggle{display:block;}
 
   .nav{
-    display:flex;
+    display:flex !important;
     flex-direction:column;
-    align-items:flex-start;
+    align-items:stretch;
     position:fixed;
-    top:76px;left:0;right:0;bottom:0;
-    background:rgba(10,10,10,0.98);
-    padding:28px 24px;
-    gap:6px;
+    top:76px;
+    left:0;
+    right:0;
+    height:calc(100vh - 76px);
+    background:#0A0A0A;
+    padding:16px 20px 32px;
+    gap:4px;
     overflow-y:auto;
-    z-index:99;
-    /* Hidden off-screen above */
-    transform:translateY(-120%);
-    opacity:0;
-    pointer-events:none;
-    transition:transform .25s ease, opacity .2s ease;
+    z-index:9999;
+    transform:translateX(100%);
+    transition:transform .25s ease;
   }
   .nav.open{
-    transform:translateY(0);
-    opacity:1;
-    pointer-events:all;
+    transform:translateX(0);
   }
   .nav a{
+    display:block !important;
     width:100%;
-    padding:16px 14px;
-    font-size:18px;
-    border-radius:8px;
+    padding:16px 16px !important;
+    font-size:17px !important;
+    border-radius:8px !important;
     color:#D7DBE2 !important;
     border:none !important;
     animation:none !important;
     background:transparent !important;
+    text-align:left;
   }
-  .nav a:hover,.nav a.active{background:rgba(255,255,255,0.08) !important;color:#fff !important;}
-  .nav a.nav-crm{color:var(--azure) !important;background:rgba(63,193,224,0.08) !important;}
-  .nav a.nav-cta{background:var(--azure) !important;color:var(--ink) !important;margin-left:0 !important;margin-top:8px;text-align:center;justify-content:center;}
-  .nav-crm::after{display:none;}
+  .nav a:hover,
+  .nav a.active{
+    background:rgba(255,255,255,0.08) !important;
+    color:#fff !important;
+  }
+  .nav a.nav-crm{
+    color:var(--azure) !important;
+    background:rgba(63,193,224,0.08) !important;
+  }
+  .nav a.nav-cta{
+    margin-left:0 !important;
+    margin-top:12px;
+    background:var(--azure) !important;
+    color:#0A0A0A !important;
+    text-align:center !important;
+    font-weight:600 !important;
+  }
+  .nav-crm::after{display:none !important;}
 }
 
 /* ---------- Buttons ---------- */
