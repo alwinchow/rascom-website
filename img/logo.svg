@@ -1,0 +1,8 @@
+<svg width="186" height="48" viewBox="0 0 186 48" xmlns="http://www.w3.org/2000/svg">
+  <text x="0" y="34" font-family="'Space Grotesk', Arial, sans-serif" font-weight="700" font-size="30"
+        textLength="108" lengthAdjust="spacingAndGlyphs" fill="#FFFFFF">RASC</text>
+  <circle cx="124" cy="22" r="16" fill="#3FC1E0"/>
+  <path d="M117 22 L122 28 L133 14" stroke="#0A0A0A" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="146" y="34" font-family="'Space Grotesk', Arial, sans-serif" font-weight="700" font-size="30"
+        textLength="34" lengthAdjust="spacingAndGlyphs" fill="#FFFFFF">M</text>
+</svg>
