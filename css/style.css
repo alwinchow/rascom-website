@@ -263,7 +263,7 @@ section{padding:clamp(64px,9vw,112px) 0;}
 @keyframes beacon{0%{transform:translate(-50%,-50%) scale(.72);opacity:.7;}70%{opacity:.12;}100%{transform:translate(-50%,-50%) scale(2.25);opacity:0;}}
 @media (max-width:760px){
   .crm-hero-grid{grid-template-columns:1fr;gap:28px;}
-  .crm-hero-grid .crm-beacon{grid-row:1;width:104px;height:104px;justify-self:start;margin-bottom:4px;}
+  .crm-hero-grid .crm-beacon{display:none;}
 }
 
 /* ---------- CRM pills ---------- */
