@@ -28,6 +28,86 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ---- Pricing → Rasveon CRM API (/api/pricing-plans) ----
+  // Public endpoint returns { plans: [...] } across regions (MY / SG / global).
+  // We show the region below (default Malaysia / MYR); the CTA sends people to the app.
+  var pricingGrid = document.getElementById('pricing-grid');
+  if (pricingGrid) {
+    var noteEl = document.getElementById('pricing-note');
+    // Local dev uses serve.py's /api proxy; production calls the Rasveon API directly.
+    // NOTE: confirm the exact host/path, and enable CORS on the API for this site's origin.
+    var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    var PRICING_API_BASE = isLocal ? '' : 'https://api.staging.rasveon.com';
+    var PRICING_ENDPOINT = PRICING_API_BASE + '/api/pricing-plans';
+    var REGION = 'MY';
+    var SIGNUP_URL = 'https://rasveon.com';
+    var CURRENCY = { MYR: 'RM', SGD: 'S$', USD: '$' };
+
+    var escapeHtml = function (s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    };
+
+    var seatLine = function (p) {
+      var sym = CURRENCY[p.currency] || '';
+      var parts = [];
+      if (p.maxSeats) parts.push('Up to ' + p.maxSeats + (p.maxSeats === 1 ? ' user' : ' users'));
+      if (p.pricePerExtraSeat != null) parts.push('+' + sym + p.pricePerExtraSeat + ' / extra seat');
+      return parts.join(' · ');
+    };
+
+    var renderPlans = function (plans) {
+      var html = plans.map(function (p) {
+        var sym = CURRENCY[p.currency] || escapeHtml(p.currency || '');
+        var badge = p.isPopular ? '<span class="price-badge">Most popular</span>' : '';
+        var seats = seatLine(p);
+        var features = (p.features || []).map(function (f) {
+          return '<li>' + escapeHtml(f) + '</li>';
+        }).join('');
+        var btnClass = p.isPopular ? 'btn btn-primary' : 'btn btn-outline';
+        return '' +
+          '<div class="price-card' + (p.isPopular ? ' is-highlighted' : '') + '">' +
+            badge +
+            '<span class="price-name">' + escapeHtml(p.planName) + '</span>' +
+            '<div class="price-amount">' +
+              '<span class="cur">' + sym + '</span>' +
+              '<span class="val">' + escapeHtml(p.priceMonthly != null ? p.priceMonthly : '—') + '</span>' +
+              '<span class="per">/mo</span>' +
+            '</div>' +
+            (seats ? '<p class="price-seats">' + escapeHtml(seats) + '</p>' : '') +
+            '<p class="price-tagline">' + escapeHtml(p.description || '') + '</p>' +
+            '<ul class="price-features">' + features + '</ul>' +
+            '<a href="' + SIGNUP_URL + '" target="_blank" rel="noopener" class="' + btnClass + '">Start free trial</a>' +
+          '</div>';
+      }).join('');
+      pricingGrid.innerHTML = html;
+    };
+
+    fetch(PRICING_ENDPOINT, { headers: { 'Accept': 'application/json' } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        var all = data.plans || [];
+        var plans = all.filter(function (p) { return p.region === REGION; });
+        if (!plans.length) plans = all.filter(function (p) { return p.region === 'global'; });
+        plans.sort(function (a, b) { return (a.sortOrder || 0) - (b.sortOrder || 0); });
+        if (!plans.length) throw new Error('No plans');
+        renderPlans(plans);
+        if (noteEl) {
+          noteEl.textContent = 'Malaysia pricing (' + (CURRENCY[plans[0].currency] || plans[0].currency) +
+            '), per workspace, billed monthly. Ask us about Singapore and global plans.';
+        }
+      })
+      .catch(function () {
+        pricingGrid.innerHTML =
+          '<p class="pricing-status error">Pricing couldn’t load right now. ' +
+          'Please <a href="/contact" style="color:var(--azure);">contact us</a> for current plans.</p>';
+      });
+  }
+
   // ---- Contact form → Azure Function (/api/contact) ----
   var form = document.getElementById('contact-form');
   if (form) {

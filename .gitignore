@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Azure Functions local settings — contains secrets, never commit
+local.settings.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
